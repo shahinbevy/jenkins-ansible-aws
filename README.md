@@ -1,10 +1,3 @@
-## Demo
-https://youtu.be/OHyKaceFi8Q
-
-## create reactjs app's jenkins pipline
-
-## setup Jenkins on EC2
-
 # install java
 ```
 sudo apt-get update
