@@ -9,7 +9,7 @@ function App() {
         <p>
         <h1> Hello World </h1>
       <h2> My name is Shahin </h2>
-<h3> I am in love with devops (CI/CD) pipeline </h3>
+<h3> I am in learning devops (CI/CD) pipeline </h3>
         </p>
         <a
           className="App-link"
