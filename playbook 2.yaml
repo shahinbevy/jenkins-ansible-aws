@@ -1,0 +1,43 @@
+- name: Build & Deploy Docker Container
+  hosts: dockerserves
+  gather_facts: false
+  remote_user: root
+  tasks:
+    - name: Copy file to remote server
+      copy:
+        src: /var/lib/jenkins/workspace/shopify-app-test/
+        dest: ~/shopify
+        remote_src: no
+    - name: Stopping the Container
+      docker_container:
+        name: mstest-shp-container
+        image: mstest-shp:latest
+        state: stopped
+#        ignore_errors: yes
+
+    - name: Removing the Container
+      docker_container:
+        name: mstest-shp-container
+        image: mstest-shp:latest
+        state: absent
+
+    - name: Remove Existing Image
+      docker_image:
+        name: mstest-shp:latest
+        state: absent
+
+    - name: Building Docker Image
+      docker_image:
+        name: mstest-shp:latest
+        build:
+          path: ~/shopify
+        state: present
+        source: build
+
+    - name: Creating the Container
+      docker_container:
+        name: mstest-shp-container
+        image: mstest-shp:latest
+        ports:
+          - "3000:3000"
+        state: started

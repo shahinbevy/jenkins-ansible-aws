@@ -1,0 +1,46 @@
+- name: Build & Deploy Docker Container
+  hosts: dockerserves
+  gather_facts: false
+  remote_user: root
+  tasks:
+  #  - name: Copy file to remote server
+   #   shell: scp -r /var/lib/jenkins/workspace/ansible-jenkins-pipeline/ root@3.7.254.10:~/project/
+    - name: Copy file to remote server
+      copy:
+        src: /var/lib/jenkins/workspace/ansible-jenkins-pipeline/
+        dest: ~/project
+        remote_src: no
+
+    - name: Stopping the Container
+      docker_container:
+        name: mstest-container
+        image: mstest:latest
+        state: stopped
+#        ignore_errors: yes
+
+    - name: Removing the Container
+      docker_container:
+        name: mstest-container
+        image: mstest:latest
+        state: absent
+
+    - name: Remove Existing Image
+      docker_image:
+        name: mstest:latest
+        state: absent
+
+    - name: Building Docker Image
+      docker_image:
+        name: mstest:latest
+        build:
+          path: ~/project
+        state: present
+        source: build
+
+    - name: Creating the Container
+      docker_container:
+        name: mstest-container
+        image: mstest:latest
+        ports:
+          - "80:80"
+        state: started
